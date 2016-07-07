@@ -43,14 +43,6 @@
 #define systime_ms() (xTaskGetTickCount()*portTICK_RATE_MS)
 #define TIME_MARKER "[%8u] "
 
-#if 0
-// espism
-#define RFM69_INT    (4)
-#define RFM69_CS     (5)
-#define LED_ON       (0)
-#define LED_OFF      (1)
-#else
-// esp boardlet
 // Set these depending on how yo hooked up the RFM69
 #define RFM69_INT     (5)
 #define RFM69_CS      (4)
@@ -58,7 +50,6 @@
 #define LED_STATUS   (15)
 #define LED_ON        (0)
 #define LED_OFF       (1)
-#endif
 
 static void set_led(uint32_t state)
 {

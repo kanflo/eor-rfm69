@@ -78,7 +78,7 @@ static int rfm69_receive_internal(char* data, unsigned int dataLength);
  * Change these to your needs or call rfm69_setCustomConfig() after module init.
  */
 #define RFM69_FREQ   (RF69_868MHZ)
-#define RFM69_NET_ID (101)
+#define RFM69_NET_ID (100)
 
 static const uint8_t rfm69_base_config[][2] =
 {
