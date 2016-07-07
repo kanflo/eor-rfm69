@@ -8,8 +8,8 @@ The driver depends on the SPI driver found in my repo, here is a short how-to:
 git clone --recursive https://github.com/SuperHouse/esp-open-rtos.git
 vi esp-open-rtos/include/ssid_config.h # Fix wifi credentials
 git clone https://github.com/kanflo/eor-spi.git esp-open-rtos/extras/spi
-git clone https://github.com/kanflo/eor-rfm69
-cd eor-rfm69/example
-export EOR_ROOT=/path/to/esp-open-rtos
+git clone https://github.com/kanflo/eor-rfm69 esp-open-rtos/extras/rfm69
+cd esp-open-rtos/extras/rfm69/example
+export EOR_ROOT=$PWD/../../..
 make && make flash
 ```
