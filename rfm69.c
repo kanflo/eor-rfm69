@@ -70,8 +70,8 @@ static bool rfm69_channelFree();
 static int rfm69_receive_internal(char* data, unsigned int dataLength);
 
 
-#define delay_ms(t) vTaskDelay((t) / portTICK_RATE_MS)
-#define mstimer_get() (xTaskGetTickCount()*portTICK_RATE_MS)
+#define delay_ms(t) vTaskDelay((t) / portTICK_PERIOD_MS)
+#define mstimer_get() (xTaskGetTickCount()*portTICK_PERIOD_MS)
 
 /** RFM69 base configuration after init().
  *
@@ -845,7 +845,7 @@ void rfm69_dumpRegisters(void)
 {
   for (unsigned int i = 1; i <= 0x71; i++)
   {
-    printf("[0x%X]: 0x%X\n", i, rfm69_readRegister(i));
+    printf("[0x%x]: 0x%x\n", i, rfm69_readRegister(i));
   }
 }
 
