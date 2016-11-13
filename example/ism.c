@@ -39,8 +39,8 @@
 #include <ssid_config.h>
 
 
-#define delay_ms(t) vTaskDelay((t) / portTICK_RATE_MS)
-#define systime_ms() (xTaskGetTickCount()*portTICK_RATE_MS)
+#define delay_ms(t) vTaskDelay((t) / portTICK_PERIOD_MS)
+#define systime_ms() (xTaskGetTickCount() * portTICK_PERIOD_MS)
 #define TIME_MARKER "[%8u] "
 
 // Set these depending on how yo hooked up the RFM69
@@ -145,5 +145,5 @@ void user_init(void)
     sdk_wifi_station_set_config(&config);
 #endif // CONFIG_NO_WIFI
 
-    xTaskCreate(&ism_task, (signed char *) "ism_task", 256, NULL, 2, NULL);
+    xTaskCreate(&ism_task, "ism_task", 256, NULL, 2, NULL);
 }
