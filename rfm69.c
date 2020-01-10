@@ -30,7 +30,7 @@
 #include <string.h>
 #include <FreeRTOS.h>
 #include <task.h>
-#include <spi.h>
+#include <esp/spi.h>
 #include "rfm69_register.h"
 
 // available frequency bands
@@ -336,15 +336,15 @@ uint8_t rfm69_readRegister(uint8_t reg)
 /*
     uint8_t data[2] = {address, 0x00};
     spi_chip_select(RFM69_CS);
-    spi_tx8(iHSPI, data[0]);
-    data[1] = (uint8_t) spi_rx8(iHSPI);
+    spi_transfer_8(1, data[0]);
+    data[1] = spi_transfer_8(1, 0);
     spi_chip_unselect(RFM69_CS);
     return data[1];
 */
 
 
-  spi_tx8(iHSPI, reg); // _spi->transfer(reg);
-  uint8_t value = (uint8_t) spi_rx8(iHSPI); // _spi->transfer(0x00);
+  spi_transfer_8(1, reg); // _spi->transfer(reg);
+  uint8_t value = spi_transfer_8(1, 0); // _spi->transfer(0x00);
 
   rfm69_chipUnselect();
 
@@ -366,8 +366,8 @@ void rfm69_writeRegister(uint8_t reg, uint8_t value)
   // transfer value to register and set the write flag
   rfm69_chipSelect();
 
-  spi_tx8(iHSPI, reg | 0x80); // _spi->transfer(reg | 0x80);
-  spi_tx8(iHSPI, value); // _spi->transfer(value);
+  spi_transfer_8(1, reg | 0x80); // _spi->transfer(reg | 0x80);
+  spi_transfer_8(1, value); // _spi->transfer(value);
 
   rfm69_chipUnselect();
 }
@@ -611,14 +611,14 @@ int rfm69_send(const void* data, unsigned int dataLength)
   rfm69_chipSelect();
 
   // address FIFO
-  spi_tx8(iHSPI, 0x00 | 0x80); // _spi->transfer(0x00 | 0x80);
+  spi_transfer_8(1, 0x00 | 0x80); // _spi->transfer(0x00 | 0x80);
 
   // send length byte
-  spi_tx8(iHSPI, dataLength); // _spi->transfer(dataLength);
+  spi_transfer_8(1, dataLength); // _spi->transfer(dataLength);
 
   // send payload
   for (unsigned int i = 0; i < dataLength; i++)
-    spi_tx8(iHSPI, ((uint8_t*)data)[i]); // _spi->transfer(((uint8_t*)data)[i]);
+    spi_transfer_8(1, ((uint8_t*)data)[i]); // _spi->transfer(((uint8_t*)data)[i]);
 
   rfm69_chipUnselect();
 
@@ -776,11 +776,11 @@ bool rfm69_setAESEncryption(const void* aesKey, unsigned int keyLength)
     rfm69_chipSelect();
 
     // address first AES MSB register
-    spi_tx8(iHSPI, 0x3E | 0x80); // _spi->transfer(0x3E | 0x80);
+    spi_transfer_8(1, 0x3E | 0x80); // _spi->transfer(0x3E | 0x80);
 
     // transfer key (0x3E..0x4D)
     for (unsigned int i = 0; i < keyLength; i++)
-      spi_tx8(iHSPI, ((uint8_t*)aesKey)[i]); // _spi->transfer(((uint8_t*)aesKey)[i]);
+      spi_transfer_8(1, ((uint8_t*)aesKey)[i]); // _spi->transfer(((uint8_t*)aesKey)[i]);
 
     rfm69_chipUnselect();
   }
