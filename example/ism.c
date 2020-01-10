@@ -30,7 +30,7 @@
 #include <string.h>
 #include <FreeRTOS.h>
 #include <task.h>
-#include <spi.h>
+#include <esp/spi.h>
 #include <espressif/sdk_private.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -58,22 +58,11 @@ static void set_led(uint32_t state)
 #endif // LED_STATUS
 }
 
-uint16_t sdk_system_adc_read(void);
-
 static void ism_task(void *p)
 {
-    while(1) {
-        uint16_t adc = sdk_system_adc_read();
-        printf("%d\n", adc);
-        delay_ms(1000);
-    }
-
 #ifdef RFM69_RESET
-//    rfm69_setResetPin(RFM69_RESET);
-//    rfm69_reset();
-    gpio_enable(RFM69_RESET, GPIO_OUTPUT);
-    gpio_write(RFM69_RESET, 0);
-//    gpio_enable(RFM69_RESET, GPIO_INPUT);
+    rfm69_setResetPin(RFM69_RESET);
+    rfm69_reset();
 #endif // RFM69_RESET
 
     bool ok = rfm69_init(RFM69_CS, false); // false = RFM69W, true = RFM69HW
@@ -133,7 +122,7 @@ void user_init(void)
         set_led(LED_OFF);
 #endif // LED_STATUS
 
-    spi_init(iHSPI);
+    spi_init(1, SPI_MODE0, SPI_FREQ_DIV_1M, 1, SPI_LITTLE_ENDIAN, true); // init SPI module
 
 #ifndef CONFIG_NO_WIFI
     struct sdk_station_config config = {
